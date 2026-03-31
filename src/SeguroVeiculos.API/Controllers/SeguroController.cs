@@ -24,7 +24,6 @@ public class SeguroController : ControllerBase
         _relatorioHandler = relatorioHandler;
     }
 
-    /// <summary>Registra um novo seguro de veículo.</summary>
     [HttpPost]
     [ProducesResponseType(typeof(CriarSeguroResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -37,7 +36,6 @@ public class SeguroController : ControllerBase
         return CreatedAtAction(nameof(ObterPorId), new { id = resultado.Value!.Id }, resultado.Value);
     }
 
-    /// <summary>Pesquisa um seguro pelo ID.</summary>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(PesquisarSeguroResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -50,7 +48,6 @@ public class SeguroController : ControllerBase
         return Ok(resultado.Value);
     }
 
-    /// <summary>Retorna o relatório com as médias aritméticas dos seguros.</summary>
     [HttpGet("relatorio/medias")]
     [ProducesResponseType(typeof(RelatorioMediasResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> RelatorioMedias(CancellationToken ct)
