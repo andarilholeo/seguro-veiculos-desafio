@@ -33,12 +33,14 @@ export default function App() {
   const carregar = () => {
     setCarregando(true)
     setErro(null)
-    fetch(API_URL)
+    const delay = new Promise<void>(resolve => setTimeout(resolve, 2000))
+    const request = fetch(API_URL)
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
         return r.json() as Promise<RelatorioMedias>
       })
-      .then(setDados)
+    Promise.all([request, delay])
+      .then(([data]) => setDados(data))
       .catch((e: Error) => setErro(e.message))
       .finally(() => setCarregando(false))
   }
@@ -48,24 +50,39 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-blue-700 text-white py-6 px-8 shadow">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
+      <header
+        className="relative text-white py-10 px-8 shadow-lg overflow-hidden"
+        style={{ backgroundImage: "url('/seguro_banner_IA.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative max-w-5xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">🚗 Seguro de Veículos</h1>
-            <p className="text-blue-200 text-sm mt-1">Relatório de Médias Aritméticas</p>
+            <h1 className="text-3xl font-bold tracking-tight drop-shadow">🚗 Seguro de Veículos</h1>
+            <p className="text-blue-200 text-sm mt-1 drop-shadow">Relatório de Médias Aritméticas</p>
           </div>
           <button
             onClick={carregar}
-            className="bg-white text-blue-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-blue-50 transition"
+            disabled={carregando}
+            className="flex items-center gap-2 bg-white/90 text-blue-700 font-semibold px-5 py-2.5 rounded-xl text-sm shadow hover:bg-white hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            ↺ Atualizar
+            {carregando ? (
+              <svg className="animate-spin h-4 w-4 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+            ) : (
+              <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            )}
+            {carregando ? 'Carregando…' : 'Atualizar'}
           </button>
         </div>
       </header>
 
       {/* Content */}
       <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-10">
-        {carregando && (
+        {carregando && !dados && (
           <div className="flex justify-center items-center py-24">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent" />
           </div>
@@ -106,11 +123,6 @@ export default function App() {
                 <Card label="Média Prêmio Comercial" value={brl(dados.mediaPremioComercial)} sub="PrêmioPuro × (1 + 5%) — Valor do Seguro" />
               </div>
             )}
-
-            <div className="mt-8 bg-blue-50 border border-blue-100 rounded-xl p-4 text-xs text-blue-600">
-              <strong>Legenda do cálculo:</strong> Taxa de Risco = (VV × 5) / (2 × VV) = 2,5% &nbsp;|&nbsp;
-              Margem de Segurança = 3% &nbsp;|&nbsp; Lucro = 5%
-            </div>
           </>
         )}
       </main>
