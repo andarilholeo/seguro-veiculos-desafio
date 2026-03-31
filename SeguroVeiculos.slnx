@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SeguroVeiculos.API/SeguroVeiculos.API.csproj" />
+    <Project Path="src/SeguroVeiculos.Application/SeguroVeiculos.Application.csproj" />
+    <Project Path="src/SeguroVeiculos.Domain/SeguroVeiculos.Domain.csproj" />
+    <Project Path="src/SeguroVeiculos.Infrastructure/SeguroVeiculos.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SeguroVeiculos.Tests/SeguroVeiculos.Tests.csproj" />
+  </Folder>
+</Solution>

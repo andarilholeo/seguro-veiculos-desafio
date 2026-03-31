@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Seguro Veículos - Dev",
+      "Group": "Servers",
+      "Host": "db",
+      "Port": 5432,
+      "MaintenanceDB": "seguro_veiculos",
+      "Username": "postgres",
+      "SSLMode": "prefer",
+      "PassFile": "/tmp/pgpass"
+    }
+  }
+}
+

@@ -1,0 +1,9 @@
+{
+  "segurados": [
+    { "id": "1", "cpf": "12345678900", "nome": "João da Silva", "idade": 30 },
+    { "id": "2", "cpf": "98765432100", "nome": "Maria Oliveira", "idade": 45 },
+    { "id": "3", "cpf": "11122233344", "nome": "Pedro Santos", "idade": 22 },
+    { "id": "4", "cpf": "55566677788", "nome": "Ana Costa", "idade": 38 }
+  ]
+}
+
