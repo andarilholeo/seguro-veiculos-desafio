@@ -1,3 +1,4 @@
+using SeguroVeiculos.Domain.Common;
 using SeguroVeiculos.Domain.Interfaces;
 
 namespace SeguroVeiculos.Application.UseCases.PesquisarSeguro;
@@ -11,12 +12,14 @@ public class PesquisarSeguroHandler
         _repository = repository;
     }
 
-    public async Task<PesquisarSeguroResponse?> ExecutarAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Result<PesquisarSeguroResponse>> ExecutarAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var seguro = await _repository.ObterPorIdAsync(id, cancellationToken);
-        if (seguro is null) return null;
 
-        return new PesquisarSeguroResponse(
+        if (seguro is null)
+            return Result<PesquisarSeguroResponse>.NotFound($"Seguro com id '{id}' não encontrado.");
+
+        var response = new PesquisarSeguroResponse(
             seguro.Id,
             seguro.Veiculo.MarcaModelo,
             seguro.Veiculo.Valor,
@@ -29,6 +32,8 @@ public class PesquisarSeguroHandler
             seguro.Calculo.PremioComercial,
             seguro.CriadoEm
         );
+
+        return Result<PesquisarSeguroResponse>.Ok(response);
     }
 }
 
