@@ -48,18 +48,14 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Seguro de Veículos API v1");
-        options.RoutePrefix = "swagger";
-    });
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Seguro de Veículos API v1");
+    options.RoutePrefix = "swagger";
+});
 
 app.UseCors("FrontendPolicy");
-app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
