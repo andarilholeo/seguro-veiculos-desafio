@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import type { RelatorioMedias } from './types'
 
-const API_URL = '/api/seguro/relatorio/medias'
+const API_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api/seguro/relatorio/medias`
+  : '/api/seguro/relatorio/medias'
 
 const brl = (value: number) =>
   value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
