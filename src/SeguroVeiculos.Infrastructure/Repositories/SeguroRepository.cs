@@ -37,6 +37,15 @@ public class SeguroRepository : ISeguroRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IEnumerable<Seguro>> ListarPorCpfAsync(string cpf, CancellationToken cancellationToken = default)
+    {
+        return await _context.Seguros
+            .Include(s => s.Veiculo)
+            .Include(s => s.Segurado)
+            .Where(s => s.Segurado.Cpf == cpf)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Seguro> AtualizarAsync(Seguro seguro, CancellationToken cancellationToken = default)
     {
         _context.Seguros.Update(seguro);

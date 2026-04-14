@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SeguroVeiculos.Application.UseCases.AtualizarSeguro;
 using SeguroVeiculos.Application.UseCases.CriarSeguro;
 using SeguroVeiculos.Application.UseCases.ListarSeguros;
+using SeguroVeiculos.Application.UseCases.ListarSegurosPorCpf;
 using SeguroVeiculos.Application.UseCases.PesquisarSeguro;
 using SeguroVeiculos.Application.UseCases.RelatorioMedias;
 using SeguroVeiculos.Application.UseCases.RemoverSeguro;
@@ -16,6 +17,7 @@ public class SeguroController : ControllerBase
     private readonly CriarSeguroHandler _criarHandler;
     private readonly PesquisarSeguroHandler _pesquisarHandler;
     private readonly ListarSegurosHandler _listarHandler;
+    private readonly ListarSegurosPorCpfHandler _listarPorCpfHandler;
     private readonly AtualizarSeguroHandler _atualizarHandler;
     private readonly RemoverSeguroHandler _removerHandler;
     private readonly RelatorioMediasHandler _relatorioHandler;
@@ -24,6 +26,7 @@ public class SeguroController : ControllerBase
         CriarSeguroHandler criarHandler,
         PesquisarSeguroHandler pesquisarHandler,
         ListarSegurosHandler listarHandler,
+        ListarSegurosPorCpfHandler listarPorCpfHandler,
         AtualizarSeguroHandler atualizarHandler,
         RemoverSeguroHandler removerHandler,
         RelatorioMediasHandler relatorioHandler)
@@ -31,6 +34,7 @@ public class SeguroController : ControllerBase
         _criarHandler = criarHandler;
         _pesquisarHandler = pesquisarHandler;
         _listarHandler = listarHandler;
+        _listarPorCpfHandler = listarPorCpfHandler;
         _atualizarHandler = atualizarHandler;
         _removerHandler = removerHandler;
         _relatorioHandler = relatorioHandler;
@@ -46,6 +50,19 @@ public class SeguroController : ControllerBase
             return ToErrorResponse(resultado.ErrorType, resultado.Error!);
 
         return CreatedAtAction(nameof(ObterPorId), new { id = resultado.Value!.Id }, resultado.Value);
+    }
+
+    [HttpGet("segurado/{cpf}")]
+    [ProducesResponseType(typeof(IEnumerable<PesquisarSeguroResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ListarPorCpf(string cpf, CancellationToken ct)
+    {
+        var resultado = await _listarPorCpfHandler.ExecutarAsync(cpf, ct);
+        if (!resultado.IsSuccess)
+            return ToErrorResponse(resultado.ErrorType, resultado.Error!);
+
+        return Ok(resultado.Value);
     }
 
     [HttpGet("{id:guid}")]
