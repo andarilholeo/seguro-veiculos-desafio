@@ -3,10 +3,6 @@ using SeguroVeiculos.Application.Interfaces;
 
 namespace SeguroVeiculos.Infrastructure.ExternalServices;
 
-/// <summary>
-/// Serviço que consulta dados do segurado em um mock REST (JSON Server).
-/// Configure a URL base em appsettings.json: "SeguradoExternoUrl"
-/// </summary>
 public class SeguradoExternoService : ISeguradoExternoService
 {
     private readonly HttpClient _httpClient;
@@ -22,7 +18,7 @@ public class SeguradoExternoService : ISeguradoExternoService
         try
         {
             var cpfLimpo = new string(cpf.Where(char.IsDigit).ToArray());
-            var response = await _httpClient.GetAsync($"/segurados?cpf={cpfLimpo}", cancellationToken);
+            var response = await _httpClient.GetAsync($"/dados-segurados?cpf={cpfLimpo}", cancellationToken);
 
             if (!response.IsSuccessStatusCode) return null;
 
@@ -32,8 +28,24 @@ public class SeguradoExternoService : ISeguradoExternoService
         }
         catch
         {
-            // Serviço externo indisponível — fallback para dados do command
             return null;
+        }
+    }
+
+    public async Task<IEnumerable<SeguradoExternoDto>> ObterPorNomeAsync(string nome, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"/dados-segurados?nome={Uri.EscapeDataString(nome)}", cancellationToken);
+
+            if (!response.IsSuccessStatusCode) return [];
+
+            var json = await response.Content.ReadAsStringAsync(cancellationToken);
+            return JsonSerializer.Deserialize<List<SeguradoExternoDto>>(json, _jsonOptions) ?? [];
+        }
+        catch
+        {
+            return [];
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SeguroVeiculos.Application.Interfaces;
 using SeguroVeiculos.Application.UseCases.AtualizarSeguro;
 using SeguroVeiculos.Application.UseCases.CriarSeguro;
+using SeguroVeiculos.Application.UseCases.ConsultarSegurado;
 using SeguroVeiculos.Application.UseCases.ListarSeguros;
 using SeguroVeiculos.Application.UseCases.ListarSegurosPorCpf;
 using SeguroVeiculos.Application.UseCases.PesquisarSeguro;
@@ -41,6 +42,8 @@ public static class DependencyInjection
         services.AddScoped<PesquisarSeguroHandler>();
         services.AddScoped<ListarSegurosHandler>();
         services.AddScoped<ListarSegurosPorCpfHandler>();
+        services.AddScoped<ConsultarSeguradoPorCpfHandler>();
+        services.AddScoped<ConsultarSeguradoPorNomeHandler>();
         services.AddScoped<AtualizarSeguroHandler>();
         services.AddScoped<RemoverSeguroHandler>();
         services.AddScoped<RelatorioMediasHandler>();
