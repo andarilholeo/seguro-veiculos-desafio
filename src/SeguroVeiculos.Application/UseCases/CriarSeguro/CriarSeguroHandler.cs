@@ -18,16 +18,19 @@ public class CriarSeguroHandler
 
     public async Task<Result<CriarSeguroResponse>> ExecutarAsync(CriarSeguroCommand command, CancellationToken cancellationToken = default)
     {
+        var seguradoExterno = await _seguradoExternoService.ObterPorCpfAsync(command.CpfSegurado, cancellationToken);
+
+        var nome = seguradoExterno?.Nome ?? command.NomeSegurado;
+        var idade = seguradoExterno?.Idade ?? command.IdadeSegurado;
+
+        var resultadoSegurado = Segurado.Criar(nome, command.CpfSegurado, idade);
+        if (!resultadoSegurado.IsSuccess)
+            return Result<CriarSeguroResponse>.Validation(resultadoSegurado.Error!);
+
         try
         {
-            var seguradoExterno = await _seguradoExternoService.ObterPorCpfAsync(command.CpfSegurado, cancellationToken);
-
-            var nome = seguradoExterno?.Nome ?? command.NomeSegurado;
-            var idade = seguradoExterno?.Idade ?? command.IdadeSegurado;
-
             var veiculo = new Veiculo(command.ValorVeiculo, command.MarcaModeloVeiculo);
-            var segurado = new Segurado(nome, command.CpfSegurado, idade);
-            var seguro = new Seguro(veiculo, segurado);
+            var seguro = new Seguro(veiculo, resultadoSegurado.Value!);
 
             await _repository.AdicionarAsync(seguro, cancellationToken);
 

@@ -1,3 +1,5 @@
+using SeguroVeiculos.Domain.Common;
+
 namespace SeguroVeiculos.Domain.Entities;
 
 public class Veiculo
@@ -18,6 +20,18 @@ public class Veiculo
         Id = Guid.NewGuid();
         Valor = valor;
         MarcaModelo = marcaModelo;
+    }
+
+    public Result<Veiculo> Atualizar(decimal valor, string marcaModelo)
+    {
+        if (valor <= 0)
+            return Result<Veiculo>.Validation("O valor do veículo deve ser maior que zero.");
+        if (string.IsNullOrWhiteSpace(marcaModelo))
+            return Result<Veiculo>.Validation("A marca/modelo do veículo é obrigatória.");
+
+        Valor = valor;
+        MarcaModelo = marcaModelo;
+        return Result<Veiculo>.Ok(this);
     }
 }
 

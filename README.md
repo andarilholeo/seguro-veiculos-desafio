@@ -130,11 +130,14 @@ Frontend disponível em: http://localhost:5173
 
 ## 🔌 Endpoints da API
 
-| Método | Rota                          | Descrição                            |
-|--------|-------------------------------|--------------------------------------|
-| POST   | `/api/seguro`                 | Cria um novo seguro                  |
-| GET    | `/api/seguro/{id}`            | Busca um seguro por ID               |
-| GET    | `/api/seguro/relatorio/medias`| Retorna médias aritméticas dos seguros |
+| Método | Rota                          | Descrição                              | Status        |
+|--------|-------------------------------|----------------------------------------|---------------|
+| POST   | `/api/seguro`                 | Cria um novo seguro                    | `201 Created` |
+| GET    | `/api/seguro`                 | Lista todos os seguros                 | `200 OK`      |
+| GET    | `/api/seguro/{id}`            | Busca um seguro por ID                 | `200 OK`      |
+| PUT    | `/api/seguro/{id}`            | Atualiza dados e recalcula o prêmio    | `200 OK`      |
+| DELETE | `/api/seguro/{id}`            | Remove um seguro                       | `204 No Content` |
+| GET    | `/api/seguro/relatorio/medias`| Retorna médias aritméticas dos seguros | `200 OK`      |
 
 ### Exemplo — Criar Seguro
 

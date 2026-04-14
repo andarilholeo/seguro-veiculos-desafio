@@ -2,9 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SeguroVeiculos.Application.Interfaces;
+using SeguroVeiculos.Application.UseCases.AtualizarSeguro;
 using SeguroVeiculos.Application.UseCases.CriarSeguro;
+using SeguroVeiculos.Application.UseCases.ListarSeguros;
 using SeguroVeiculos.Application.UseCases.PesquisarSeguro;
 using SeguroVeiculos.Application.UseCases.RelatorioMedias;
+using SeguroVeiculos.Application.UseCases.RemoverSeguro;
 using SeguroVeiculos.Domain.Interfaces;
 using SeguroVeiculos.Infrastructure.Data;
 using SeguroVeiculos.Infrastructure.ExternalServices;
@@ -27,15 +30,15 @@ public static class DependencyInjection
             .CommandTimeout(60)
         ));
 
-        // Repositórios
         services.AddScoped<ISeguroRepository, SeguroRepository>();
 
-        // Use Cases (Application)
         services.AddScoped<CriarSeguroHandler>();
         services.AddScoped<PesquisarSeguroHandler>();
+        services.AddScoped<ListarSegurosHandler>();
+        services.AddScoped<AtualizarSeguroHandler>();
+        services.AddScoped<RemoverSeguroHandler>();
         services.AddScoped<RelatorioMediasHandler>();
 
-        // Serviço externo de segurado (mock JSON Server)
         var seguradoUrl = configuration["SeguradoExternoUrl"] ?? "http://localhost:3001";
         services.AddHttpClient<ISeguradoExternoService, SeguradoExternoService>(client =>
         {

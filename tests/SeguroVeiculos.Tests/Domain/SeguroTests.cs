@@ -9,7 +9,7 @@ public class SeguroTests
     public void CriarSeguro_ComDadosValidos_CalculaAutomaticamente()
     {
         var veiculo = new Veiculo(10_000m, "Toyota Corolla");
-        var segurado = new Segurado("João Silva", "123.456.789-00", 35);
+        var segurado = Segurado.Criar("João Silva", "123.456.789-00", 35).Value!;
 
         var seguro = new Seguro(veiculo, segurado);
 
@@ -22,7 +22,7 @@ public class SeguroTests
     [Fact]
     public void CriarSeguro_VeiculoNulo_LancaExcecao()
     {
-        var segurado = new Segurado("João Silva", "123.456.789-00", 35);
+        var segurado = Segurado.Criar("João Silva", "123.456.789-00", 35).Value!;
         Assert.Throws<ArgumentNullException>(() => new Seguro(null!, segurado));
     }
 

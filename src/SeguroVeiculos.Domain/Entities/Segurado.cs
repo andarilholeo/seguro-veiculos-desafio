@@ -1,3 +1,5 @@
+using SeguroVeiculos.Domain.Common;
+
 namespace SeguroVeiculos.Domain.Entities;
 
 public class Segurado
@@ -9,19 +11,40 @@ public class Segurado
 
     private Segurado() { }
 
-    public Segurado(string nome, string cpf, int idade)
+    private Segurado(string nome, string cpf, int idade)
     {
-        if (string.IsNullOrWhiteSpace(nome))
-            throw new ArgumentException("O nome do segurado é obrigatório.", nameof(nome));
-        if (string.IsNullOrWhiteSpace(cpf))
-            throw new ArgumentException("O CPF do segurado é obrigatório.", nameof(cpf));
-        if (idade <= 0 || idade > 120)
-            throw new ArgumentException("A idade do segurado deve ser válida.", nameof(idade));
-
         Id = Guid.NewGuid();
         Nome = nome;
         Cpf = cpf;
         Idade = idade;
+    }
+
+    public static Result<Segurado> Criar(string nome, string cpf, int idade)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            return Result<Segurado>.Validation("O nome do segurado é obrigatório.");
+        if (string.IsNullOrWhiteSpace(cpf))
+            return Result<Segurado>.Validation("O CPF do segurado é obrigatório.");
+        if (idade <= 0 || idade > 120)
+            return Result<Segurado>.Validation("A idade do segurado deve ser válida.");
+
+        return Result<Segurado>.Ok(new Segurado(nome, cpf, idade));
+    }
+
+    public Result<Segurado> Atualizar(string nome, string cpf, int idade)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            return Result<Segurado>.Validation("O nome do segurado é obrigatório.");
+        if (string.IsNullOrWhiteSpace(cpf))
+            return Result<Segurado>.Validation("O CPF do segurado é obrigatório.");
+        if (idade <= 0 || idade > 120)
+            return Result<Segurado>.Validation("A idade do segurado deve ser válida.");
+
+        Nome = nome;
+        Cpf = cpf;
+        Idade = idade;
+
+        return Result<Segurado>.Ok(this);
     }
 }
 
