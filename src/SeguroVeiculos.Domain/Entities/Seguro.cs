@@ -1,4 +1,6 @@
+using SeguroVeiculos.Domain.Common;
 using SeguroVeiculos.Domain.ValueObjects;
+
 
 namespace SeguroVeiculos.Domain.Entities;
 
@@ -22,6 +24,20 @@ public class Seguro
         Segurado = segurado;
         Calculo = CalculoSeguro.Calcular(veiculo.Valor);
         CriadoEm = DateTime.UtcNow;
+    }
+
+    public Result<bool> Atualizar(decimal novoValorVeiculo, string novaMarcaModelo, string novoNome, string novoCpf, int novaIdade)
+    {
+        var resultadoVeiculo = Veiculo.Atualizar(novoValorVeiculo, novaMarcaModelo);
+        if (!resultadoVeiculo.IsSuccess)
+            return Result<bool>.Fail(resultadoVeiculo.Error!, resultadoVeiculo.ErrorType);
+
+        var resultadoSegurado = Segurado.Atualizar(novoNome, novoCpf, novaIdade);
+        if (!resultadoSegurado.IsSuccess)
+            return Result<bool>.Fail(resultadoSegurado.Error!, resultadoSegurado.ErrorType);
+
+        Calculo = CalculoSeguro.Calcular(novoValorVeiculo);
+        return Result<bool>.Ok(true);
     }
 }
 

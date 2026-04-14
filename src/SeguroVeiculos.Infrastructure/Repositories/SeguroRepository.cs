@@ -36,5 +36,18 @@ public class SeguroRepository : ISeguroRepository
             .Include(s => s.Segurado)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<Seguro> AtualizarAsync(Seguro seguro, CancellationToken cancellationToken = default)
+    {
+        _context.Seguros.Update(seguro);
+        await _context.SaveChangesAsync(cancellationToken);
+        return seguro;
+    }
+
+    public async Task RemoverAsync(Seguro seguro, CancellationToken cancellationToken = default)
+    {
+        _context.Seguros.Remove(seguro);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }
 
