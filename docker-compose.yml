@@ -42,19 +42,6 @@ services:
     networks:
       - seguro_veiculos_network
 
-  mock:
-    image: node:22-alpine
-    container_name: seguro_veiculos_mock
-    working_dir: /app
-    command: sh -c "npm install -g json-server && json-server --watch db.json --host 0.0.0.0 --port 3001"
-    volumes:
-      - ./mock/db.json:/app/db.json:ro
-    ports:
-      - "3001:3001"
-    restart: unless-stopped
-    networks:
-      - seguro_veiculos_network
-
   api:
     build:
       context: .
@@ -63,15 +50,13 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=seguro_veiculos;Username=postgres;Password=postgres"
-      SeguradoExternoUrl: "http://mock:3001"
+      SeguradoExternoUrl: "https://69cc7bebddc3cabb7bd1381d.mockapi.io"
       AllowedOrigins: "http://localhost:5080"
     ports:
       - "5070:8080"
     depends_on:
       db:
         condition: service_healthy
-      mock:
-        condition: service_started
     restart: unless-stopped
     networks:
       - seguro_veiculos_network
